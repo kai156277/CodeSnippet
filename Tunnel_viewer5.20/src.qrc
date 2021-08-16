@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>shanke.jpg</file>
+        <file>tunnel_back.jpg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>image/tunnel_type.png</file>
+        <file>image/attribute_point_extraction.png</file>
+        <file>image/section_extract.png</file>
+        <file>image/section_fitting.png</file>
+        <file>image/deformation_analysis.png</file>
+        <file>image/tunnel.png</file>
+    </qresource>
+</RCC>

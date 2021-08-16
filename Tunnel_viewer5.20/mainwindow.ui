@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>473</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>隧道变形检测评价系统</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="src.qrc">
+    <normaloff>:/image/tunnel.png</normaloff>:/image/tunnel.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QGLViewer" name="viewer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>473</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuset">
+    <property name="title">
+     <string>设置</string>
+    </property>
+    <addaction name="actionset"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>数据处理</string>
+    </property>
+    <widget class="QMenu" name="menufit">
+     <property name="title">
+      <string>横断面拟合</string>
+     </property>
+     <addaction name="actionspline"/>
+     <addaction name="actionbezie"/>
+    </widget>
+    <widget class="QMenu" name="menuaxis">
+     <property name="title">
+      <string>中轴线生成</string>
+     </property>
+     <addaction name="actionprojection"/>
+     <addaction name="actionnormal"/>
+    </widget>
+    <widget class="QMenu" name="menuex">
+     <property name="title">
+      <string>横断面提取</string>
+     </property>
+     <addaction name="actionindividual"/>
+     <addaction name="actioncontinues"/>
+    </widget>
+    <widget class="QMenu" name="menude_2">
+     <property name="title">
+      <string>形变分析</string>
+     </property>
+     <addaction name="actionfeature"/>
+     <addaction name="actionexcel"/>
+    </widget>
+    <addaction name="menuaxis"/>
+    <addaction name="menuex"/>
+    <addaction name="menufit"/>
+    <addaction name="menude_2"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menu"/>
+   <addaction name="menuset"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_tunnel_type_"/>
+   <addaction name="Axis_extract"/>
+   <addaction name="action_section_extract_"/>
+   <addaction name="action_section_fitting_"/>
+   <addaction name="action_attribute_point_extraction_"/>
+   <addaction name="action_deformation_analysis_"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>打开点云</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>保存点云</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="actionExtract_iteratively">
+   <property name="text">
+    <string>批量提取</string>
+   </property>
+  </action>
+  <action name="actionExtract_individually">
+   <property name="text">
+    <string>单个提取</string>
+   </property>
+  </action>
+  <action name="Axis_extract">
+   <property name="icon">
+    <iconset resource="image/axis.qrc">
+     <normaloff>:/new/prefix1/Axis.png</normaloff>:/new/prefix1/Axis.png</iconset>
+   </property>
+   <property name="text">
+    <string>中轴线生成</string>
+   </property>
+  </action>
+  <action name="actionNormals_extract">
+   <property name="text">
+    <string>法向量提取</string>
+   </property>
+  </action>
+  <action name="action_tunnel_type_">
+   <property name="icon">
+    <iconset resource="src.qrc">
+     <normaloff>:/image/tunnel_type.png</normaloff>:/image/tunnel_type.png</iconset>
+   </property>
+   <property name="text">
+    <string>隧道类型</string>
+   </property>
+   <property name="toolTip">
+    <string>选择隧道类型</string>
+   </property>
+  </action>
+  <action name="action_section_extract_">
+   <property name="icon">
+    <iconset resource="src.qrc">
+     <normaloff>:/image/section_extract.png</normaloff>:/image/section_extract.png</iconset>
+   </property>
+   <property name="text">
+    <string>横断面提取</string>
+   </property>
+  </action>
+  <action name="action_section_fitting_">
+   <property name="icon">
+    <iconset resource="src.qrc">
+     <normaloff>:/image/section_fitting.png</normaloff>:/image/section_fitting.png</iconset>
+   </property>
+   <property name="text">
+    <string>横断面拟合</string>
+   </property>
+  </action>
+  <action name="action_attribute_point_extraction_">
+   <property name="icon">
+    <iconset resource="src.qrc">
+     <normaloff>:/image/attribute_point_extraction.png</normaloff>:/image/attribute_point_extraction.png</iconset>
+   </property>
+   <property name="text">
+    <string>特征点提取</string>
+   </property>
+  </action>
+  <action name="action_deformation_analysis_">
+   <property name="icon">
+    <iconset resource="src.qrc">
+     <normaloff>:/image/deformation_analysis.png</normaloff>:/image/deformation_analysis.png</iconset>
+   </property>
+   <property name="text">
+    <string>形变分析</string>
+   </property>
+  </action>
+  <action name="actionset">
+   <property name="text">
+    <string>显示设置</string>
+   </property>
+  </action>
+  <action name="actionprojection">
+   <property name="text">
+    <string>双向投影法</string>
+   </property>
+  </action>
+  <action name="actionnormal">
+   <property name="text">
+    <string>法向量法</string>
+   </property>
+  </action>
+  <action name="actionindividual">
+   <property name="text">
+    <string>单个提取</string>
+   </property>
+  </action>
+  <action name="actioncontinues">
+   <property name="text">
+    <string>连续提取</string>
+   </property>
+  </action>
+  <action name="actionspline">
+   <property name="text">
+    <string>B样条拟合</string>
+   </property>
+  </action>
+  <action name="actionbezie">
+   <property name="text">
+    <string>贝塞尔拟合</string>
+   </property>
+  </action>
+  <action name="actionfeature">
+   <property name="text">
+    <string>特征点提取</string>
+   </property>
+  </action>
+  <action name="actionexcel">
+   <property name="text">
+    <string>报表输出</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QGLViewer</class>
+   <extends>QOpenGLWidget</extends>
+   <header>QGLViewer/qglviewer.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="image/axis.qrc"/>
+  <include location="src.qrc"/>
+ </resources>
+ <connections/>
+</ui>
