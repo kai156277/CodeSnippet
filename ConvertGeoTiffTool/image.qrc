@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>convert.png</file>
+        <file>restart.png</file>
+    </qresource>
+</RCC>
