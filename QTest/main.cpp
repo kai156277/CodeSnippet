@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
+#include <QProgressBar>
+#include <QProgressDialog>
 #include <QString>
 #include <QTextStream>
 #include <QTime>
@@ -39,12 +41,22 @@ bool search_map(const std::map<T, A> &map, T v)
 
 int main(int argc, char *argv[])
 {
-    double a = 123456.123456;
-    printf("% 12.3lf\n", a);         // 右对齐
-    printf("%-12.3lf\n", a);         // 左对齐
-    printf("%0*.*lf\n", 12, 3, a);   // 右对齐前导0
-    qDebug() << QString::asprintf("% 12.3lf\n", a);
-    qDebug() << QString::asprintf("%-12.3lf\n", a);
-    qDebug() << QString::asprintf("%0*.*lf\n", 12, 3, a);
-    return 0;
+    QApplication    a(argc, argv);
+    QProgressDialog progress("load image", "cancel", 0, 20, nullptr);
+    progress.setMinimumDuration(0);
+    progress.setWindowModality(Qt::WindowModal);
+    QProgressBar *bar = new QProgressBar;
+    bar->setMinimum(0);
+    bar->setMaximum(0);
+    progress.setBar(bar);
+    progress.setValue(20);
+    for (int i = 0; i < 20; ++i)
+    {
+        if (progress.wasCanceled())
+            break;
+
+        qDebug() << i;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+    a.exec();
 }
