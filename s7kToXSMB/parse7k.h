@@ -1,4 +1,4 @@
-#ifndef PARSE7K_H
+﻿#ifndef PARSE7K_H
 #define PARSE7K_H
 #include "7kdef.h"
 #include <QDebug>
@@ -30,14 +30,14 @@ typedef struct record_data
 
 typedef struct _geoinfo
 {
-    float dir_ang[512];
+    float dir_ang[512] = {0.0};
 
 } K7004GEOINFO;
 
 typedef struct _bathinfo
 {
     float        velocity;
-    float        range[512];
+    float        range[512] = {0.0};
     QList<float> intensite;
 } K7006BATHINFO;
 
@@ -60,6 +60,7 @@ PINGINFO _parseData7006(char *buffer, int init);
 
 /*********** functions for PINGINFO type variables*****************/
 PINGINFO ping_merge(PINGINFO p7000, PINGINFO p7004, PINGINFO p7006);
+PINGINFO ping_merge(const R7000 &r7000, const R7027 &r7027);
 bool     ping_diff(PINGINFO p1, PINGINFO p2, PINGINFO p3);
 
 #endif   // PARSE7K_H

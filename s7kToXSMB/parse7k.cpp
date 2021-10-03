@@ -1,4 +1,4 @@
-#include "parse7k.h"
+﻿#include "parse7k.h"
 #include <QDataStream>
 #include <QDebug>
 #include <QFile>
@@ -548,4 +548,26 @@ bool ping_diff(PINGINFO p1, PINGINFO p2, PINGINFO p3)
     }
     */
     return true;
+}
+
+PINGINFO ping_merge(const R7000 &r7000, const R7027 &r7027)
+{
+    PINGINFO ping_info;
+    ping_info.flag                    = 0;
+    ping_info.K7000SonarSettings      = r7000.mRTH;
+    ping_info.K7PointNum              = r7027.mRDs.size();
+    ping_info.K7Time                  = r7000.mDRF.mTimeStamp;
+    ping_info.K7006PingNum            = r7027.mRTH.mPingNumber;
+    ping_info.K7006Bathmetry.velocity = r7000.mRTH.mSoundVelocity;
+
+    for (int i = 0; i < r7027.mRDs.size(); ++i)
+    {
+        float two_way_time = r7027.mRDs[i].mDetectionPoint / r7027.mRTH.mSamplingRate;
+        float range        = two_way_time * r7000.mRTH.mSoundVelocity / 2;   // 查找声速
+
+        ping_info.K7004Geometry.dir_ang[i] = r7027.mRDs[i].mRxAngle;
+        ping_info.K7006Bathmetry.range[i]  = range;
+        ping_info.K7006Bathmetry.intensite.push_back(20);
+    }
+    return ping_info;
 }

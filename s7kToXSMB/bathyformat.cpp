@@ -275,13 +275,13 @@ void BATHYFORMAT::fileReadMbFile(QFile &mbfile)
     char       at2       = 0;
     char *     xbuffer   = &at2;
     QByteArray dataArray;
-    dataArray = mbfile.read(4);
-    int fileHeaderSize;
+    dataArray = mbfile.read(2);
+    uint16_t fileHeaderSize;
     buffer = dataArray.data();
-    byteChange(xbuffer, buffer, 4);
-    memcpy(&fileHeaderSize, xbuffer, 4);
-    dataArray = mbfile.read(fileHeaderSize);
-    buffer    = dataArray.data();
+    // byteChange(xbuffer, buffer, 2);
+    memcpy(&fileHeaderSize, buffer, 2);
+    dataArray += mbfile.read(fileHeaderSize - 2);
+    buffer = dataArray.data();
     qDebug() << "readHeaderFileSize:" << fileHeaderSize;
     MBFILEHEAD fileHeadData;
     _fileReadFileHeader(buffer, fileHeadData, sizeCount);
@@ -321,14 +321,15 @@ void BATHYFORMAT::fileReadMbFile(QFile &mbfile)
     while (!mbfile.atEnd())
     {
         qDebug() << "packetCount:" << ++packetCount;
-        QByteArray bathArray = mbfile.read(4);
+        qDebug() << "pos:" << mbfile.pos();
+        QByteArray bathArray = mbfile.read(8);
         int        bathSize;
         int        sizeCount_2 = 0;
         buffer                 = bathArray.data();
-        byteChange(xbuffer, buffer, 4);
-        memcpy(&bathSize, xbuffer, 4);
-        bathArray = mbfile.read(bathSize);
-        buffer    = bathArray.data();
+        // byteChange(xbuffer, buffer, 4);
+        memcpy(&bathSize, buffer + 4, 4);
+        bathArray += mbfile.read(bathSize - 8);
+        buffer = bathArray.data();
         qDebug() << "bathsize:" << bathSize;
 
         unsigned int  packetName;

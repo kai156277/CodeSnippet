@@ -33,3 +33,6 @@ HEADERS += \
     bathyformat.h \
     parse7k.h \
     xtfformat.h
+
+INCLUDEPATH += C:/ThirdPartyLib/spdlog
+DEPENDPATH += C:/ThirdPartyLib/spdlog

@@ -1,4 +1,4 @@
-#ifndef K7DEF_H
+﻿#ifndef K7DEF_H
 #define K7DEF_H
 
 #include "stdint.h"
@@ -57,8 +57,7 @@ struct DataRecordFrame
     uint16_t mRecrodVersion;
     uint32_t mRecordTypeIdentifier;
     uint32_t mDeviceIdentifier;
-    uint16_t mReserved;
-    uint16_t mSystemEnumerator;
+    uint32_t mSystemEnumerator;
     uint32_t mReserved1;
     uint16_t mFlags;
     uint16_t mReserved2;
@@ -159,7 +158,7 @@ struct R7004
     float *         mBeamHAngles;
     float *         mBeamWidthYs;
     float *         mBeamWidthXs;
-    float *         mTxDelays;
+    // float *         mTxDelays;
 };
 
 struct R7027RTH
@@ -185,10 +184,21 @@ struct R7027RD
     uint32_t mFlags;
     uint32_t mQuality;
     float    mUncertainty;
+};
+/*
+struct R7027RD
+{
+    uint16_t mBeamDescriptor;
+    float    mDetectionPoint;
+    float    mRxAngle;
+    uint32_t mFlags;
+    uint32_t mQuality;
+    float    mUncertainty;
     float    mIntensity;
     float    mMinLimit;
     float    mMaxLimit;
 };
+*/
 
 struct R7027OD
 {
@@ -216,7 +226,7 @@ struct R7027ODBeam
 struct R7027
 {
     DataRecordFrame      mDRF;
-    R7000RTH             mRTH;
+    R7027RTH             mRTH;
     QVector<R7027RD>     mRDs;
     R7027OD              mOD;
     QVector<R7027ODBeam> mODBeams;
