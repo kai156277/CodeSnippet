@@ -1,68 +1,70 @@
-/*
+ï»¿/*
 **********************************************************************************************
-* @Copyright(C):ÇàµºĞãÉ½ÒÆ¶¯²âÁ¿ÓĞÏŞ¹«Ë¾
+* @Copyright(C):é’å²›ç§€å±±ç§»åŠ¨æµ‹é‡æœ‰é™å…¬å¸
 
 * @File Name:ScanTransPage.h
 
-* @Author:ÖìÊçºì
+* @Author:æœ±æ·‘çº¢
 
 * @Version:1.1
 
 * @Date:2012.7.19
 
-* @Description: ¸ÃÀàÊÇÊı¾İ¹ıÂËÌõ¼şµÄ½çÃæÀà¡£
+* @Description: è¯¥ç±»æ˜¯æ•°æ®è¿‡æ»¤æ¡ä»¶çš„ç•Œé¢ç±»ã€‚
 **********************************************************************************************
 */
 
 #ifndef ScanFilePage_H
 #define ScanFilePage_H
- 
+
 #include <QDialog>
- 
+
 #include "DataTypeDefs.h"
-#include "WizardPage.h"
 #include "MultiTreeView.h"
- 
+#include "WizardPage.h"
+
+#include <common/PageParam.h>
+
 namespace Ui {
-    class ScanFilePage;
+class ScanFilePage;
 }
 
 /*!
-*@brief ¸ÃÀàÊÇÊı¾İ¹ıÂËÌõ¼şµÄ½çÃæÀà
-*@note ÏÔÊ¾¸Ã½çÃæºóµã»÷È·¶¨·¢³öĞÅºÅoksignal()£¬ÏÔÊ¾ÏÂÒ»¸ö½çÃæ¡£
+*@brief è¯¥ç±»æ˜¯æ•°æ®è¿‡æ»¤æ¡ä»¶çš„ç•Œé¢ç±»
+*@note æ˜¾ç¤ºè¯¥ç•Œé¢åç‚¹å‡»ç¡®å®šå‘å‡ºä¿¡å·oksignal()ï¼Œæ˜¾ç¤ºä¸‹ä¸€ä¸ªç•Œé¢ã€‚
 */
- 
+
 class ScanFilePage : public WizardPage
 {
     Q_OBJECT
 
 public:
-    /*!  ¹¹Ôìº¯Êı           */
-    explicit ScanFilePage(const QString& title, QWidget *parent = 0);
+    /*!  æ„é€ å‡½æ•°           */
+    explicit ScanFilePage(const QString &title, QWidget *parent = 0);
 
-    /*!  Îö¹¹º¯Êı           */
+    /*!  ææ„å‡½æ•°           */
     virtual ~ScanFilePage();
- 
-    virtual bool IsValid();
-    virtual void SetPageParam(xstype::PageParam* param);
 
-    virtual bool OnPageParam(xstype::PageParam* param);
-    virtual void GetSelFiles(xstype::ScannerFileMap&);
-    virtual void getFiles(const QString& strDatDir);
+    virtual bool IsValid();
+    virtual void SetPageParam(xstype::PageParam *param);
+
+    virtual bool OnPageParam(xstype::PageParam *param);
+    virtual void GetSelFiles(xstype::ScannerFileMap &);
+    virtual void getFiles(const QString &strDatDir);
 protected slots:
- 
+
     void on_pushButton_lasDir_clicked();
- 
-    void onDataDirTextChanged(const QString& text);
+
+    void onDataDirTextChanged(const QString &text);
 
 protected:
-    Ui::ScanFilePage *ui;                     ///< ½çÃæµÄÖ¸Õë
+    Ui::ScanFilePage *     ui;   ///< ç•Œé¢çš„æŒ‡é’ˆ
     xstype::ScannerFileMap m_datFileMap;
- 
-    MultiTreeView* m_treeFiles;
-    QIcon  m_treeIcon1; 
-    QIcon  m_treeIcon2;
-    QString m_datDir;
+
+    MultiTreeView *m_treeFiles;
+    QIcon          m_treeIcon1;
+    QIcon          m_treeIcon2;
+    QString        m_datDir;
 };
 
-#endif // ScanTransPage_H
+#endif   // ScanTransPage_H

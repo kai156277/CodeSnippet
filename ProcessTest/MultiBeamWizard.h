@@ -1,25 +1,27 @@
- 
+ï»¿
 #ifndef MultiBeamWizard_H
 #define MultiBeamWizard_H
- 
-#include "WizardWidget.h"
-#include "DataTypeDefs.h"
-#include "Criterion.h"
+
 #include "Constants.h"
- 
+#include "Criterion.h"
+#include "DataTypeDefs.h"
+#include "WizardWidget.h"
+
+#include "MainWindow.h"
+
 class MultiBeamWizard : public WizardWidget
 {
- 
-public:
-    /*!  ¹¹Ôìº¯Êı           */
-    explicit MultiBeamWizard(QWidget *parent, MainWindow* wnd= 0);
 
-    /*!  Îö¹¹º¯Êı           */
+public:
+    /*!  æ„é€ å‡½æ•°           */
+    explicit MultiBeamWizard(QWidget *parent, MainWindow *wnd = 0);
+
+    /*!  ææ„å‡½æ•°           */
     virtual ~MultiBeamWizard();
- 
-    void AfterInit();
-    void onProjectClosed();
+
+    void         AfterInit();
+    void         onProjectClosed();
     virtual void onBack(int);
 };
 
-#endif // ScanWizard_H
+#endif   // ScanWizard_H

@@ -1,29 +1,30 @@
-/*
+ï»¿/*
 **********************************************************************************************
-* @Copyright(C):ÇàµºĞãÉ½ÒÆ¶¯²âÁ¿ÓĞÏŞ¹«Ë¾
+* @Copyright(C):é’å²›ç§€å±±ç§»åŠ¨æµ‹é‡æœ‰é™å…¬å¸
 
 * @File Name:ScanOutPage.h
 
-* @Author:ÖìÊçºì
+* @Author:æœ±æ·‘çº¢
 
 * @Version:1.1
 
 * @Date:2012.7.19
 
-* @Description: ¸ÃÀàÊÇÊı¾İ¹ıÂËÌõ¼şµÄ½çÃæÀà¡£
+* @Description: è¯¥ç±»æ˜¯æ•°æ®è¿‡æ»¤æ¡ä»¶çš„ç•Œé¢ç±»ã€‚
 **********************************************************************************************
 */
 
 #ifndef ScanOutPage_H
 #define ScanOutPage_H
- 
+
 #include <QDialog>
- 
+
 #include "DataType.h"
 #include "WizardPage.h"
- 
+
+#include <PageParam.h>
 namespace Ui {
-    class ScanOutPage;
+class ScanOutPage;
 }
 
 class CoordInfoWidget;
@@ -32,22 +33,22 @@ class ScanOutPage : public WizardPage
     Q_OBJECT
 
 public:
-    /*!  ¹¹Ôìº¯Êı           */
-    explicit ScanOutPage(const QString& title, bool bmb, QWidget *parent = 0);
+    /*!  æ„é€ å‡½æ•°           */
+    explicit ScanOutPage(const QString &title, bool bmb, QWidget *parent = 0);
 
-    /*!  Îö¹¹º¯Êı           */
+    /*!  ææ„å‡½æ•°           */
     ~ScanOutPage();
- 
-    virtual void SetPageParam(xstype::PageParam* param);
+
+    virtual void SetPageParam(xstype::PageParam *param);
 
     virtual bool IsValid();
-    virtual bool OnPageParam(xstype::PageParam* param);
+    virtual bool OnPageParam(xstype::PageParam *param);
 
 private:
-    void setCalibrate(double rphV[3]);//, ScannerType::unit unit
+    void setCalibrate(double rphV[3]);   //, ScannerType::unit unit
     void setMb(bool mb);
     //void setOver(double paraV[6]);
- 
+
 private slots:
 
     void on_checkBox_outputLASFile_toggled(bool);
@@ -55,11 +56,12 @@ private slots:
     void on_groupBox_single_toggled(bool bChecked);
     void on_checkBox_q12_toggled(bool bChecked);
     void on_checkBox_scanMb_toggled(bool bChecked);
+
 private:
-    Ui::ScanOutPage *ui;                     ///< ½çÃæµÄÖ¸Õë
-    bool m_bMb;
+    Ui::ScanOutPage *ui;   ///< ç•Œé¢çš„æŒ‡é’ˆ
+    bool             m_bMb;
     //bool m_scanMb;
-    CoordInfoWidget* m_coordInfo;
+    CoordInfoWidget *m_coordInfo;
 };
 
-#endif // ScanOutPage_H
+#endif   // ScanOutPage_H

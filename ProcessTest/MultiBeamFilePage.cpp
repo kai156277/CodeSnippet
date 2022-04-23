@@ -1,79 +1,75 @@
-/*
+ï»¿/*
 **********************************************************************************************
-* @Copyright(C):ÇàµºĞãÉ½ÒÆ¶¯²âÁ¿ÓĞÏŞ¹«Ë¾
+* @Copyright(C):é’å²›ç§€å±±ç§»åŠ¨æµ‹é‡æœ‰é™å…¬å¸
 
 * @File Name:ScanTransPage.h
 
-* @Author:ÖìÊçºì
+* @Author:æœ±æ·‘çº¢
 
 * @Version:1.1
 
 * @Date:2012.7.19
 
-* @Description: ¸ÃÀàÊÇÊı¾İ¹ıÂËÌõ¼şµÄ½çÃæÀà¡£
+* @Description: è¯¥ç±»æ˜¯æ•°æ®è¿‡æ»¤æ¡ä»¶çš„ç•Œé¢ç±»ã€‚
 **********************************************************************************************
 */
 
 //#include <QPlastiqueStyle>
-#include <QMessageBox>
 #include <QLayout>
+#include <QMessageBox>
 
 #include "MultiBeamFilePage.h"
-#include "ui_ScanFilePage.h"
-#include <QFileDialog>
-#include <QDebug>
 #include "ParamMgr.h"
 #include "PluginMgr.h"
-#include "pubfun.h"
-#include "uifun.h"
-#include "ScanParam.h"
 #include "ProjectMgr.h"
+#include "ScanParam.h"
 #include "interfacePrompt.h"
+#include "pubfun.h"
+#include "ui_ScanFilePage.h"
+#include "uifun.h"
+#include <QDebug>
+#include <QFileDialog>
 using namespace xscommon;
 using namespace xstype;
 
-MultiBeamFilePage::MultiBeamFilePage(const QString& title, QWidget *parent) :
-ScanFilePage(title, parent) 
+MultiBeamFilePage::MultiBeamFilePage(const QString &title, QWidget *parent)
+    : ScanFilePage(title, parent)
 {
- 
 }
 
- 
 MultiBeamFilePage::~MultiBeamFilePage()
 {
-
 }
- 
+
 bool MultiBeamFilePage::IsValid()
 {
- 
-    if (!checkLineEditDir(ui->lineEdit_lasDir, m_titleHint, QStringLiteral("ÇëÊäÈëLAS±£´æÂ·¾¶£¡")))
-    {
-        return false;
-    }
- 
+
+    //    if (!checkLineEditDir(ui->lineEdit_lasDir, m_titleHint, QStringLiteral("è¯·è¾“å…¥LASä¿å­˜è·¯å¾„ï¼")))
+    //    {
+    //        return false;
+    //    }
 
     if (m_datFileMap.empty())
     {
-        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("Ã»ÓĞÔ­Ê¼Êı¾İÎÄ¼ş£¡"));
+        //        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("æ²¡æœ‰åŸå§‹æ•°æ®æ–‡ä»¶ï¼"));
         return false;
     }
-    QString strScan = ProjectManage::getInstance()->getMBType();
-    const MultiBeamParaAll* pMbAll = ParamMgr::getInstance()->GetMBParaAll(strScan);
+    QString                 strScan = ProjectManage::getInstance()->getMBType();
+    const MultiBeamParaAll *pMbAll  = ParamMgr::getInstance()->GetMBParaAll(strScan);
     if (strScan.isEmpty() || (pMbAll == NULL))
     {
-        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("¶à²¨Êø¼ìĞ£²ÎÊı²»´æÔÚ£¬ÇëÉèÖÃ£¡"));
+        //        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("å¤šæ³¢æŸæ£€æ ¡å‚æ•°ä¸å­˜åœ¨ï¼Œè¯·è®¾ç½®ï¼"));
         return false;
     }
     //qDebug() << pMbAll->strPlugin;
 
     ScannerFileMapIt it = m_datFileMap.begin();
     //for (; it != m_datFileMap.end(); ++it)
-    {   
+    {
         //qDebug() << it->first;
         if (pMbAll->strPlugin != it->first)
         {
-            interfacePrompt::Warn(this, m_titleHint, QStringLiteral("¶à²¨Êø¼ìĞ£²ÎÊı%1ºÍÔ­Ê¼Êı¾İ²»Ò»ÖÂ£¬ÇëÖØĞÂÉèÖÃ£¡").arg(strScan));
+            //            interfacePrompt::Warn(this, m_titleHint, QStringLiteral("å¤šæ³¢æŸæ£€æ ¡å‚æ•°%1å’ŒåŸå§‹æ•°æ®ä¸ä¸€è‡´ï¼Œè¯·é‡æ–°è®¾ç½®ï¼").arg(strScan));
             return false;
         }
     }
@@ -82,18 +78,18 @@ bool MultiBeamFilePage::IsValid()
     GetSelFiles(sel);
     if (sel.empty())
     {
-        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("ÇëÑ¡ÔñÎÄ¼ş£¡"));
+        //        interfacePrompt::Warn(this, m_titleHint, QStringLiteral("è¯·é€‰æ‹©æ–‡ä»¶ï¼"));
         return false;
     }
     return true;
 }
 
-void MultiBeamFilePage::SetPageParam(PageParam* param)
+void MultiBeamFilePage::SetPageParam(PageParam *param)
 {
-    ScanParam* dp = static_cast<ScanParam*>(param);
-    QString strScan = ProjectManage::getInstance()->getMBType();
-    dp->scanPara = ParamMgr::getInstance()->GetMBParaAll(strScan);
-    dp->paraMb = nullptr;
+    ScanParam *dp      = static_cast<ScanParam *>(param);
+    QString    strScan = ProjectManage::getInstance()->getMBType();
+    dp->scanPara       = ParamMgr::getInstance()->GetMBParaAll(strScan);
+    dp->paraMb         = nullptr;
 
     //if (sp)
     //{
@@ -102,25 +98,25 @@ void MultiBeamFilePage::SetPageParam(PageParam* param)
     ScannerFileMap sel;
     GetSelFiles(sel);
     dp->datFileResultMap = sel;
- 
-    dp->strDatPath = ProjectManage::getInstance()->getMBDirPath();//ui->lineEdit_datDir->text();
-    dp->strSpanFilePath = ProjectManage::getInstance()->getSpanFilePath();//ui->lineEdit_span->text();
 
-    dp->strSavePath = ui->lineEdit_lasDir->text();
+    dp->strDatPath      = ProjectManage::getInstance()->getMBDirPath();      //ui->lineEdit_datDir->text();
+    dp->strSpanFilePath = ProjectManage::getInstance()->getSpanFilePath();   //ui->lineEdit_span->text();
+
+    //    dp->strSavePath = ui->lineEdit_lasDir->text();
     dp->strSavePath.replace('\\', '/');
     // dp->getLasFileMap(true);
 }
- 
-bool MultiBeamFilePage::OnPageParam(PageParam* param)
+
+bool MultiBeamFilePage::OnPageParam(PageParam *param)
 {
-    ScanParam* dp = static_cast<ScanParam*>(param);
+    ScanParam *dp = static_cast<ScanParam *>(param);
 
     //    ui->lineEdit_datDir->setText(dp->strDatPath);
     if (dp->strSavePath.isEmpty())
     {
         dp->strSavePath = ProjectManage::getInstance()->getLasDirPath();
     }
-    ui->lineEdit_lasDir->setText(dp->strSavePath);
+    //    ui->lineEdit_lasDir->setText(dp->strSavePath);
     if (dp->strDatPath.isEmpty())
     {
         dp->strDatPath = ProjectManage::getInstance()->getMBDirPath();
@@ -130,7 +126,7 @@ bool MultiBeamFilePage::OnPageParam(PageParam* param)
     return true;
 }
 
-void MultiBeamFilePage::getFiles(const QString& strDatDir)
+void MultiBeamFilePage::getFiles(const QString &strDatDir)
 {
     m_datFileMap.clear();
     PluginManage::getInstance()->GetAllSupportMBFiles(strDatDir, m_datFileMap);

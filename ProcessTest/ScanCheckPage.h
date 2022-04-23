@@ -1,31 +1,31 @@
- 
+ï»¿
 #ifndef ScanCheckPage_H
 #define ScanCheckPage_H
 
-
 #include <QDialog>
-#include <vector>
+#include <QListWidgetItem>
 #include <QString>
 #include <QStringList>
-#include <QListWidgetItem>
+#include <vector>
 
-#include "DataType.h"
 #include "CheckPage.h"
- 
-class  ScanCheckPage : public CheckPage
-{
- 
-public:
-    /*! ¹¹Ôìº¯Êı  */
-    ScanCheckPage(const QString& title, bool, QWidget *parent = 0);
+#include "DataType.h"
 
-    /*! Îö¹¹º¯Êı  */
+#include <PageParam.h>
+class ScanCheckPage : public CheckPage
+{
+
+public:
+    /*! æ„é€ å‡½æ•°  */
+    ScanCheckPage(const QString &title, bool, QWidget *parent = 0);
+
+    /*! ææ„å‡½æ•°  */
     ~ScanCheckPage();
- 
-    virtual void PrintPageParam(xstype::PageParam* param);
+
+    virtual void PrintPageParam(xstype::PageParam *param);
 
 protected:
     bool m_bMultiBeam;
 };
 
-#endif // CheckPage_H
+#endif   // CheckPage_H

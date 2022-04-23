@@ -1,4 +1,4 @@
- 
+ï»¿ 
 #ifndef MultiBeamProgressWidget_H
 #define MultiBeamProgressWidget_H
  
@@ -14,10 +14,10 @@ class MultiBeamProgressWidget : public ScanProgressWidget
 {
  
 public:
-    /*!  ¹¹Ôìº¯Êı           */
+    /*!  æ„é€ å‡½æ•°           */
     explicit MultiBeamProgressWidget(QWidget *parent = 0);
 
-    /*!  Îö¹¹º¯Êı           */
+    /*!  ææ„å‡½æ•°           */
     ~MultiBeamProgressWidget();
     void Init(xstype::PageParam* param);
  

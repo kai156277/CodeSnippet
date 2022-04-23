@@ -1,29 +1,29 @@
- 
+ï»¿
 #ifndef ScanWizard_H
 #define ScanWizard_H
- 
-#include "WizardWidget.h"
-#include "DataTypeDefs.h"
-#include "Criterion.h"
+
 #include "Constants.h"
+#include "Criterion.h"
+#include "DataTypeDefs.h"
+#include "WizardWidget.h"
 namespace xstype {
-    struct ScanParam;
+struct ScanParam;
 }
-void initParam(xstype::ScanParam* param, bool bMultiBeam);
+void initParam(xstype::ScanParam *param, bool bMultiBeam);
 class ScanWizard : public WizardWidget
 {
- 
-public:
-    /*!  ¹¹Ôìº¯Êı           */
-    explicit ScanWizard(QWidget *parent, MainWindow* wnd= 0);
 
-    /*!  Îö¹¹º¯Êı           */
+public:
+    /*!  æ„é€ å‡½æ•°           */
+    explicit ScanWizard(QWidget *parent);
+
+    /*!  ææ„å‡½æ•°           */
     virtual ~ScanWizard();
- 
+
     void AfterInit();
-     
-    void onProjectClosed();
+
+    void         onProjectClosed();
     virtual void onBack(int);
 };
 
-#endif // ScanWizard_H
+#endif   // ScanWizard_H

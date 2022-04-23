@@ -1,65 +1,62 @@
- 
+ï»¿
 //#include <QPlastiqueStyle>
-#include <QMessageBox>
 #include <QLayout>
+#include <QMessageBox>
 
 #include "MultiBeamProgressWidget.h"
 #include "ui_ProgressWidget.h"
-#include <QFileDialog>
 #include <QDebug>
+#include <QFileDialog>
 #include <QLabel>
 
 #include <QProgressBar>
 
 #include "PluginMgr.h"
- 
+
 #include "ProjectMgr.h"
 
 #include "pubfun.h"
- 
-#include "para.h"
+
+#include "GlobalOption.h"
 #include "MultiBeamTransThread.h"
 #include "ScanParam.h"
 #include "interfacePrompt.h"
-#include "GlobalOption.h"
- 
+#include "para.h"
+
 #include "SimpleViewer.h"
 using namespace xscommon;
 using namespace pcm;
 using namespace xstype;
 
-MultiBeamProgressWidget::MultiBeamProgressWidget(QWidget *parent) :
-ScanProgressWidget(parent)
+MultiBeamProgressWidget::MultiBeamProgressWidget(QWidget *parent)
+    : ScanProgressWidget(parent)
 {
-    m_titleHint = QStringLiteral("¶à²¨ÊøµãÔÆÉú³É");
+    m_titleHint = QStringLiteral("å¤šæ³¢æŸç‚¹äº‘ç”Ÿæˆ");
 }
 
-
-// Îö¹¹º¯Êı
+// ææ„å‡½æ•°
 MultiBeamProgressWidget::~MultiBeamProgressWidget()
 {
- 
 }
- 
 
-void MultiBeamProgressWidget::Init(PageParam* param)
+void MultiBeamProgressWidget::Init(PageParam *param)
 {
-    m_bars.clear();
-    ScanParam& dp = *static_cast<ScanParam*>(param);
+    //    m_bars.clear();
+    ScanParam &      dp = *static_cast<ScanParam *>(param);
     ScannerFileMapIt it;
-    createBar(dp.strSpanFilePath);
-    posPath = dp.strSpanFilePath;
+    //    createBar(dp.strSpanFilePath);
+    posPath       = dp.strSpanFilePath;
     unsigned numf = 0;
-    for (it = dp.datFileResultMap.begin(); it != dp.datFileResultMap.end(); it++) //ÒÀ´Î´¦ÀíÃ¿¸öÉ¨ÃèÒÇ
+    for (it = dp.datFileResultMap.begin(); it != dp.datFileResultMap.end(); it++)   //ä¾æ¬¡å¤„ç†æ¯ä¸ªæ‰«æä»ª
     {
-        QString scannerName = it->first;                           // »ñÈ¡É¨ÃèÒÇÀàĞÍ
-        const FileMap& datFileList = it->second;             // »ñÈ¡É¨ÃèÒÇdatÎÄ¼şÁĞ±í
-        //const QStringList& lasFileList = param.lasFileMap[it.key()]; // »ñÈ¡las½á¹ûÎÄ¼şÁĞ±í
+        QString        scannerName = it->first;    // è·å–æ‰«æä»ªç±»å‹
+        const FileMap &datFileList = it->second;   // è·å–æ‰«æä»ªdatæ–‡ä»¶åˆ—è¡¨
+        //const QStringList& lasFileList = param.lasFileMap[it.key()]; // è·å–lasç»“æœæ–‡ä»¶åˆ—è¡¨
 
-        for (FileMapIt itf = datFileList.begin(); itf != datFileList.end(); ++itf)      // ±éÀúÃ¿¸öÉ¨ÃèÒÇµÄÎÄ¼ş
+        for (FileMapIt itf = datFileList.begin(); itf != datFileList.end(); ++itf)   // éå†æ¯ä¸ªæ‰«æä»ªçš„æ–‡ä»¶
         {
             numf++;
-            createBar(itf->first);
+            //            createBar(itf->first);
         }
     }
 
@@ -69,16 +66,16 @@ void MultiBeamProgressWidget::Init(PageParam* param)
     m_num = 100;
     if (numf > 60)
     {
-        m_num = int((float(numf) / 60.0f)*100.0f);
+        m_num = int((float(numf) / 60.0f) * 100.0f);
     }
-    const GlobalOption::ParamStruct& opt = GlobalOption::Parameters();
+    const GlobalOption::ParamStruct &opt = GlobalOption::Parameters();
     if (opt.bLasGpu)
     {
         m_num *= 2;
     }
- 
-    uint32_t flag = FieldPara::ProjFlag;
-    ProjParams4Json& ppm = dp.projPara.projParam;
+
+    uint32_t         flag = FieldPara::ProjFlag;
+    ProjParams4Json &ppm  = dp.projPara.projParam;
     if (ppm.projMethod == Project::UTM)
     {
         flag |= FieldPara::UtmFlag;
@@ -88,14 +85,14 @@ void MultiBeamProgressWidget::Init(PageParam* param)
     {
         flag |= FieldPara::EarthSFlag;
     }
- 
+
     if (ppm.hemisphere == Position::ES || ppm.hemisphere == Position::EN)
     {
         flag |= FieldPara::EarthEFlag;
     }
     //??
-    ((SimpleViewer*)m_posWidget)->addToDB(posFile, m_num, false, true, true, flag, ppm.L0*DEG_TO_RAD);//Ê±¼ä¶Î??
-  
+    //    ((SimpleViewer *) m_posWidget)->addToDB(posFile, m_num, false, true, true, flag, ppm.L0 * DEG_TO_RAD);   //æ—¶é—´æ®µ??
+
     if (opt.bLasGpu)
     {
         m_thread = new MultiBeamTransThread();
@@ -106,8 +103,6 @@ void MultiBeamProgressWidget::Init(PageParam* param)
     }
 
     InitThread(param);
- 
+
     m_thread->start();
- 
 }
- 

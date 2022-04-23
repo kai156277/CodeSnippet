@@ -1,39 +1,41 @@
- 
+ï»¿
 #ifndef ScanProgressWidget_H
 #define ScanProgressWidget_H
- 
- 
-#include <vector>
+
 #include <map>
- 
+#include <vector>
+
 #include <QString>
- 
+
 #include "ProgressWidget.h"
-class  QProgressBar;
+
+#include <common/PageParam.h>
+
+class QProgressBar;
 class ScanProgressWidget : public ProgressWidget
 {
- 
+
 public:
-    /*!  ¹¹Ôìº¯Êı           */
+    /*!  æ„é€ å‡½æ•°           */
     explicit ScanProgressWidget(QWidget *parent = 0);
 
-    /*!  Îö¹¹º¯Êı           */
+    /*!  ææ„å‡½æ•°           */
     ~ScanProgressWidget();
-    void Init(xstype::PageParam* param);
- 
-protected:
- 
-    void onBeginFile(const QString& fileName);
+    void Init(xstype::PageParam *param);
 
-    void onEndFile(const QString& fileName, unsigned, unsigned);
+protected:
+    void onBeginFile(const QString &fileName);
+
+    void onEndFile(const QString &fileName, unsigned, unsigned);
 
     void onEndProcess(int num);
- 
+
     void on_pushButton_close_clicked();
+
 protected:
-    QProgressBar* m_posBar;
-    int m_num;
-    QString posPath;
+    QProgressBar *m_posBar;
+    int           m_num;
+    QString       posPath;
 };
 
-#endif // ScanProgressWidget_H
+#endif   // ScanProgressWidget_H
