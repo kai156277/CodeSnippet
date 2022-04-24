@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QDebug>
+#include <QString>
 
 #include <GlobalOption.h>
 #include <OpenCLHelper.h>
@@ -12,10 +13,13 @@
 
 #include <DataTypeDefs.h>
 #include <MultiBeamTransThread.h>
+#include <ScanMbTransThread.h>
 #include <ScanParam.h>
+#include <ScanSingleTransThread.h>
 #include <ScanTransThread.h>
 
-using xstype::ScanParam;
+#include <map>
+#include <utility>
 
 int main(int argc, char *argv[])
 {
@@ -40,10 +44,13 @@ int main(int argc, char *argv[])
     qDebug() << "scan: " << ParamMgr::getInstance()->GetScannerList();
     qDebug() << "mb: " << ParamMgr::getInstance()->GetMBList();
 
+    ProcessThread *m_thread = nullptr;
     //    ScanTransThread thread;
-    ScanParam *dp = new ScanParam;
-    //    ProjectManage::getInstance()->getScanType();
+    xstype::ScanParam *dp = new xstype::ScanParam;
+    qDebug() << "build scan param";
+    ProjectManage::getInstance()->getScanType();
     QString strScan = "VSurs-W-VZ2000-20190316";
+    dp->bSingle     = false;
     dp->scanPara    = ParamMgr::getInstance()->GetScannerParaAll(strScan);
     qDebug() << "x:" << dp->scanPara->scannerOne.lx;
 
@@ -57,121 +64,123 @@ int main(int argc, char *argv[])
         dp->paraMb = nullptr;
     }
 
-    if (sp)
+    xstype::ScannerFileMap sel;
+    xstype::FileMap        file_map;
+    file_map.push_back(std::make_pair("C:\\Users\\zhao\\Documents\\Data\\seabat7125\\8.7_rxp_data\\20210807_0918.rxp", 411.55 * 1024 * 1024));
+    sel["RIEGL"]         = file_map;
+    dp->datFileResultMap = sel;
+
+    dp->strDatPath      = "C:\\Users\\zhao\\Documents\\Data\\seabat7125\\8.7_rxp_data";                    //ui->lineEdit_datDir->text();
+    dp->strSpanFilePath = "C:\\Users\\zhao\\Documents\\Data\\seabat7125\\hyrdrins\\ie_20210807_000.txt";   //ui->lineEdit_span->text();
+
+    dp->strSavePath = "C:\\Users\\zhao\\Documents\\Data\\seabat7125";
+    dp->strSavePath.replace('\\', '/');
+    dp->getLasFileMap(true);
+    for (auto file : dp->lasFileMap)
     {
-        sp->toArray(dp->para);
+        qDebug() << file.first;
+        qDebug() << file.second;
     }
-    //    ScannerFileMap sel;
-    //    GetSelFiles(sel);
-    //    dp->datFileResultMap = sel;
 
-    //    dp->strDatPath      = ProjectManage::getInstance()->getDataDirPath();    //ui->lineEdit_datDir->text();
-    //    dp->strSpanFilePath = ProjectManage::getInstance()->getSpanFilePath();   //ui->lineEdit_span->text();
+    QStringList posFile;
+    posFile << dp->strSpanFilePath;
+    const GlobalOption::ParamStruct &opt = GlobalOption::Parameters();
 
-    //    //    dp->strSavePath = ui->lineEdit_lasDir->text();
-    //    dp->strSavePath.replace('\\', '/');
-    //    ///dp->getLasFileMap(false);
+    dp->bUseBeijingTime = false;
+    dp->dMaxAngle       = 360 * DEG_TO_RAD;
+    dp->dMinAngle       = 0 * DEG_TO_RAD;
+    dp->dMaxRadius      = 200;   // 极径过滤
+    dp->dMinRadius      = 0;
+    dp->uMaxIntensity   = 255;
+    dp->uMinIntensity   = 0;
+    dp->dMaxTime        = 86400;   // s
+    dp->dMinTime        = 0;
 
-    //    ScanParam &dp = *static_cast<ScanParam *>(param);
+    dp->bSkipPause = false;
+    dp->speedPause = 0.01;
+    if (dp->speedPause == 0.0)
+    {
+        dp->speedPause = FLT_EPSILON;
+    }
+    //    dp->dMaxHorRadius      = GetMaxHorDistance();
+    //    dp->dMinHorRadius      = GetMinHorDistance();
+    //    dp->bHorDist           = ui->checkBox_horDist->isChecked();
+    dp->nLineThinFrequency = 1;      // 扫描线抽稀条数
+    dp->dStayDistance      = 0.05;   // 抽稀点间距
+    //dp->nStaySearchPointNum = ui->spinBox_lasStayPointSearchNum->value();
 
-    //    unsigned numf = 0;
-    //    for (auto it = dp.datFileResultMap.begin(); it != dp.datFileResultMap.end(); it++)   //依次处理每个扫描仪
-    //    {
-    //        QString                scannerName = it->first;    // 获取扫描仪类型
-    //        const xstype::FileMap &datFileList = it->second;   // 获取扫描仪dat文件列表
-    //        //const QStringList& lasFileList = param.lasFileMap[it.key()]; // 获取las结果文件列表
+    dp->filterSetting.bBadLineCheck = true;   // 坏线过滤
+    dp->filterSetting.bEdgeCheck    = true;   // 边缘过滤
+    if (true)
+    {
+        dp->filterSetting.bSingleCheck = true;    // 单点过滤
+        dp->filterSetting.singleDist   = 10.00;   // 极径因子
+        dp->filterSetting.singleNum    = 2;       // 点数
+    }
+    else
+    {
+        dp->filterSetting.bSingleCheck = false;
+    }
 
-    //        for (auto itf = datFileList.begin(); itf != datFileList.end(); ++itf)   // 遍历每个扫描仪的文件
-    //        {
-    //            numf++;
-    //            //            createBar(itf->first);
-    //        }
-    //    }
+    if (true)
+    {
+        dp->filterSetting.bRefCheck = true;
+        dp->filterSetting.minRef    = -20;
+        dp->filterSetting.maxRef    = 100;
+    }
+    else
+    {
+        dp->filterSetting.bRefCheck = false;
+    }
 
-    //    QStringList posFile;
-    //    posFile << dp.strSpanFilePath;
-    //    numf++;
-    //    m_num = 100;
-    //    if (numf > 60)
-    //    {
-    //        m_num = int((float(numf) / 60.0f) * 100.0f);
-    //    }
-    //    const GlobalOption::ParamStruct &opt = GlobalOption::Parameters();
-    //    if (opt.bLasGpu)
-    //    {
-    //        m_num *= 2;
-    //    }
-    //    if (dp.bCreateLinFile && !dp.bCreateLasFile)
-    //    {
-    //        m_num *= 2;
-    //    }
-    //    if (!dp.bSingle)
-    //    {
-    //        uint32_t flag = 0;
-    //        double   l0   = pcm::INVALID_L0;
-    //        if (dp.bScanMb)
-    //        {
-    //            flag                 = FieldPara::ProjFlag;
-    //            ProjParams4Json &ppm = dp.projPara.projParam;
-    //            if (ppm.projMethod == Project::UTM)
-    //            {
-    //                flag |= FieldPara::UtmFlag;
-    //            }
+    if (dp->bSingle)
+    {
+        m_thread = new ScanSingleTransThread();
+    }
+    else if (dp->bScanMb)
+    {
+        if (opt.bLasGpu)
+        {
+            m_thread = new ScanMbTransThread();
+        }
+        else
+        {
+            m_thread = new ScanMbTransMPThread();
+        }
+    }
+    else
+    {
+        if (opt.bLasGpu)
+        {
+            m_thread = new ScanTransThread();
+        }
+        else
+        {
+            m_thread = new ScanTransMPThread();
+        }
+    }
 
-    //            if (ppm.hemisphere == Position::ES || ppm.hemisphere == Position::WS)
-    //            {
-    //                flag |= FieldPara::EarthSFlag;
-    //            }
+    QObject::connect(m_thread, &ScanTransThread::updateValue, [](int value) {
+        qDebug() << "process value: " << value;
+    });
 
-    //            if (ppm.hemisphere == Position::ES || ppm.hemisphere == Position::EN)
-    //            {
-    //                flag |= FieldPara::EarthEFlag;
-    //            }
-    //            l0 = ppm.L0 * DEG_TO_RAD;
-    //        }
-    //        //??
-    //        ((SimpleViewer *) m_posWidget)->addToDB(posFile, m_num, false, true, true, flag, l0);   //时间段??
-    //    }
+    QObject::connect(m_thread, &ProcessThread::endFile, [](QString file_name, unsigned a, unsigned b) {
+        qDebug() << "end file: " << file_name << "a: " << a << "b: " << b;
+    });
 
-    //    if (dp.dStayDistance < 0.01)
-    //    {
-    //        m_num *= 5;
-    //    }
+    QObject::connect(m_thread, &ProcessThread::beginFile, [](QString file_name) {
+        qDebug() << "begin file: " << file_name;
+    });
 
-    //    if (dp.bSingle)
-    //    {
-    //        m_thread = new ScanSingleTransThread();
-    //    }
-    //    else if (dp.bScanMb)
-    //    {
-    //        if (opt.bLasGpu)
-    //        {
-    //            m_thread = new ScanMbTransThread();
-    //        }
-    //        else
-    //        {
-    //            m_thread = new ScanMbTransMPThread();
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if (opt.bLasGpu)
-    //        {
-    //            m_thread = new ScanTransThread();
-    //        }
-    //        else
-    //        {
-    //            m_thread = new ScanTransMPThread();
-    //        }
-    //    }
+    QObject::connect(m_thread, &ProcessThread::messageBox, [](const QString &text, int err, const QString &a) {
+        qDebug() << "text: " << text << "err: " << err << "a: " << a;
+    });
 
-    //    InitThread(param);
+    m_thread->Init(dp);
+    m_thread->start();
 
-    //    m_thread->start();
+    WizardWidget wizard;
+    wizard.show();
 
-    //    WizardWidget wizard;
-    //    wizard.show();
-
-    //    return a.exec();
-    return 0;
+    return a.exec();
 }
