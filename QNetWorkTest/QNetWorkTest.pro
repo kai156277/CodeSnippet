@@ -22,11 +22,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     HydrinsReceiver.cpp \
+    RealtimeServer.cpp \
     main.cpp \
     Widget.cpp
 
 HEADERS += \
     HydrinsReceiver.h \
+    RealtimeServer.h \
     Widget.h
 
 FORMS += \
