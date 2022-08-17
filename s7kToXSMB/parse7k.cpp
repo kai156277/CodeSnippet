@@ -566,7 +566,7 @@ PINGINFO ping_merge(const R7000 &r7000, const R7027 &r7027)
         float range        = two_way_time * r7000.mRTH.mSoundVelocity / 2;   // 查找声速
 
         ping_info.K7004Geometry.dir_ang[i] = r7027.mRDs[i].mRxAngle;
-        ping_info.K7006Bathmetry.range[i]  = range;
+        ping_info.K7006Bathmetry.range[i]  = two_way_time;
         ping_info.K7006Bathmetry.intensite.push_back(20);
     }
     return ping_info;

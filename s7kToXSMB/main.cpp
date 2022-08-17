@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     log_init();
 
+    /*
     QString xsmb = QFileDialog::getOpenFileName(nullptr, "xsmb", "D:\\Data\\0806-7125\\PDS2000-s7k", "xsmb (*.xsmb)");
     //    QString xsmb = "D:\\Data\\0806-7125\\PDS2000-s7k\\DATA2021080203_001.xsmb";
     if (!xsmb.isEmpty())
@@ -88,7 +89,8 @@ int main(int argc, char *argv[])
         qDebug() << "END";
     }
     return 0;
-    QStringList s7k_file_strs = QFileDialog::getOpenFileNames(nullptr, "open s7k file", "D:\\Data\\0806-7125\\PDS2000-s7k", "s7k (*.s7k)");
+*/
+    QStringList s7k_file_strs = QFileDialog::getOpenFileNames(nullptr, "open s7k file", "", "s7k (*.s7k)");
     qDebug() << "num of file: " << s7k_file_strs.size();
     for (int i = 0; i < s7k_file_strs.size(); ++i)
     {
@@ -243,7 +245,7 @@ int main(int argc, char *argv[])
         if (_sensorNameArr.size() < 16)
             _nameSize = _sensorNameArr.size();
         memcpy(&(mbFileSaveHead.multibeam_sensor[0]), _sensorNameArr.data(), _nameSize);
-        mbFileSaveHead.day         = 20210806;     // yyyyMMdd
+        mbFileSaveHead.day         = 20220813;     // yyyyMMdd
         mbFileSaveHead.rxMountTilt = 0;            // 换能器倾角(-30)
         mbFileSaveHead.start_time  = 103000.776;   // "hhmmss.zzz";
         mbFileSaveHead.head_num    = 1;            // 换能器数量

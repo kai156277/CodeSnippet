@@ -1277,7 +1277,7 @@ void BATHYFORMAT::parse7kDataToMBStruct(PINGINFO p, MBBATHYDATA &Sodabathydata)
         int   ms    = (p.K7Time.mSeconds - int(p.K7Time.mSeconds)) * 1000;
         QTime time(p.K7Time.mHours, p.K7Time.mMinutes, int(p.K7Time.mSeconds), ms);
         headerdata.date       = date1.toString("yyyyMMdd").toInt();       // yyyymmdd
-        headerdata.time       = time.toString("hhmmss.zzz").toDouble();   // hhmmss.zzz
+        headerdata.time       = time.toString("HHmmss.zzz").toDouble();   // hhmmss.zzz
         headerdata.pingNum    = p.K7006PingNum;
         headerdata.pingPeriod = p.K7000SonarSettings.mPingPeriod;
         headerdata.soundSpeed = p.K7006Bathmetry.velocity;

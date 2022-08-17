@@ -34,5 +34,5 @@ HEADERS += \
     parse7k.h \
     xtfformat.h
 
-INCLUDEPATH += C:/ThirdPartyLib/spdlog
-DEPENDPATH += C:/ThirdPartyLib/spdlog
+INCLUDEPATH += C:/ThirdPartyLib
+DEPENDPATH += C:/ThirdPartyLib
