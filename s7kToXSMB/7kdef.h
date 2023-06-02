@@ -2,6 +2,7 @@
 #define K7DEF_H
 
 #include "stdint.h"
+
 #include <QVector>
 
 enum RecordType : uint32_t
@@ -184,6 +185,9 @@ struct R7027RD
     uint32_t mFlags;
     uint32_t mQuality;
     float    mUncertainty;
+    float    mIntensity;
+    float    mMinLimit;
+    float    mMaxLimit;
 };
 /*
 struct R7027RD

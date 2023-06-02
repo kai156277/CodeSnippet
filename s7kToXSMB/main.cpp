@@ -1,13 +1,12 @@
-﻿#include <QApplication>
+﻿#include "7kdef.h"
+//#include "bathyformat.h"
+
+#include <QApplication>
 #include <QDataStream>
 #include <QDateTime>
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
-
-#include "7kdef.h"
-#include "bathyformat.h"
-
 #include <spdlog/qt_spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -69,7 +68,7 @@ struct fmt::formatter<R7027RTH>
 };
 
 void log_init();
-void saveTxtInfo(const QString &s7k_file_str);
+void saveTxtInfo(const QString &s7k_file_str, const QVector<R7027> &r7027s, const QVector<R7000> &r7000s);
 
 int main(int argc, char *argv[])
 {
@@ -197,7 +196,7 @@ int main(int argc, char *argv[])
                         continue;
                     float two_way_time = r7027rd.mDetectionPoint / r7027.mRTH.mSamplingRate;
                     float range        = two_way_time * r7000s[0].mRTH.mSoundVelocity / 2;
-                    // SPDLOG_TRACE("{}, {:10f} s, {:10f} m", r7027rd, two_way_time, range);
+                    //                    SPDLOG_INFO("{:10f}, {:10f} s, {:10f} m", r7027rd.mRxAngle * rad_to_deg, two_way_time, range);
                     r7027.mRDs.push_back(r7027rd);
                 }
                 r7027.mDRF = drf;
@@ -227,6 +226,7 @@ int main(int argc, char *argv[])
         int r7000_index = 0;
         int r7027_index = 0;
 
+        /*
         QFile xsmb_file(s7k_file_info.absolutePath() + "\\" + s7k_file_info.baseName() + ".xsmb");
         if (!xsmb_file.open(QIODevice::WriteOnly))
         {
@@ -298,6 +298,8 @@ int main(int argc, char *argv[])
                 ++r7027_index;
             }
         }
+        */
+        saveTxtInfo(s7k_file_str, r7027s, r7000s);
     }
     qDebug() << "END!";
 
@@ -325,7 +327,7 @@ void log_init()
     spdlog::set_level(spdlog::level::trace);
 }
 
-void saveTxtInfo(const QString &s7k_file_str)
+void saveTxtInfo(const QString &s7k_file_str, const QVector<R7027> &r7027s, const QVector<R7000> &r7000s)
 {
     QFileInfo s7k_file_info(s7k_file_str);
     QFile     mb_file(s7k_file_info.absolutePath() + "\\" + s7k_file_info.baseName() + ".txt");
@@ -334,16 +336,18 @@ void saveTxtInfo(const QString &s7k_file_str)
         qDebug() << "can`t open mb file";
         return;
     }
+    qDebug() << "save :" << mb_file.fileName();
     QTextStream write_stream(&mb_file);
     write_stream.setFieldAlignment(QTextStream::AlignRight);
     write_stream.setRealNumberPrecision(10);
     write_stream.setRealNumberNotation(QTextStream::FixedNotation);
 
-    QVector<R7000> r7000s;
+    //    QVector<R7000> r7000s;
     QVector<R7004> r7004s;
-    QVector<R7027> r7027s;
+    //    QVector<R7027> r7027s;
 
     // qDebug() << "record type ids:" << rt_id;
+    /*
     for (int j = 0; j < r7000s.size(); ++j)
     {
         write_stream << qSetFieldWidth(16)
@@ -355,6 +359,7 @@ void saveTxtInfo(const QString &s7k_file_str)
                      << qSetFieldWidth(0)
                      << endl;
     }
+    */
 
     for (int j = 0; j < r7004s.size(); ++j)
     {
