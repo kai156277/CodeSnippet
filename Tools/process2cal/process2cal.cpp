@@ -19,7 +19,7 @@ constexpr double DEG_TO_RAD = (PI / 180.0);               // 度转弧度
 
 using namespace std;
 
-bool process2cal(const QString& file_name, const QString& suffix = "cal");
+bool process2cal(const QString &file_name, const QString &suffix, double hA_offset, double vA_offset);
 QStringList itemsOrderChange(const QStringList& process_items);
 
 int main(int argc, char* argv[])
@@ -36,14 +36,14 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < size; ++i)
 	{
 		fmt::print("{}/{}: ",i+1, size);
-		process2cal(process_file_names[i]);
+        process2cal(process_file_names[i], "cal", 90, 0);
 	}
 
 	cout << "Hello CMake." << endl;
 	return 0;
 }
 
-bool process2cal(const QString& file_name, const QString& suffix)
+bool process2cal(const QString &file_name, const QString &suffix, double hA_offset, double vA_offset)
 {
 	QFile process_cal_file(file_name);
 	QFileInfo pcal_file_info(file_name);
@@ -72,9 +72,8 @@ bool process2cal(const QString& file_name, const QString& suffix)
 		if(items.size() != 25)
 			continue;
 
-		double hA = items[2].toDouble() * RAD_TO_DEG;
-		double vA = items[3].toDouble() * RAD_TO_DEG;
-        hA += 90.0;
+		double hA = items[2].toDouble() * RAD_TO_DEG + hA_offset;
+		double vA = items[3].toDouble() * RAD_TO_DEG + vA_offset;
         if(hA >360.0)
             hA -= 360.0;
 		items[2] = QString::number(hA, 'f', 16);
