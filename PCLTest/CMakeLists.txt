@@ -8,6 +8,7 @@ find_package(Eigen3 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(Qt5 REQUIRED ${QT})
 find_package(spdlog REQUIRED)
+find_package(laslib CONFIG REQUIRED)
 
 # Eigen + fmt 9.1.0 需要此配置
 add_definitions(-DFMT_DEPRECATED_OSTREAM)
@@ -27,6 +28,7 @@ add_executable(${PROJECT_NAME} ${BUILD_TYPE} ${SOURCES} ${PUBLIC_HEADERS} ${PRIV
 
 target_link_libraries(${PROJECT_NAME}
         ${PCL_LIBRARIES}
+        LASlib
         Eigen3::Eigen
         fmt::fmt-header-only
         spdlog::spdlog_header_only

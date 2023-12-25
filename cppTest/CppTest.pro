@@ -1,15 +1,21 @@
 QT += core gui widgets
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++17
 CONFIG -= app_bundle
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    Dialog.cpp
 
-win32:CONFIG(release, debug|release): LIBS += -LC:/ThirdPartyLib/vsurs0415/vsurs/lib/release/ -lBaseProcThread
-else:win32:CONFIG(debug, debug|release): LIBS += -LC:/ThirdPartyLib/vsurs0415/vsurs/lib/debug/ -lBaseProcThread
+INCLUDEPATH += C:/ThirdPartyLib/libspdlog-1.8.2/include
+DEPENDPATH += C:/ThirdPartyLib/libspdlog-1.8.2/include
 
-INCLUDEPATH += C:/ThirdPartyLib/vsurs0415/vsurs/include
-DEPENDPATH += C:/ThirdPartyLib/vsurs0415/vsurs/include
+msvc {
+    QMAKE_CFLAGS += /utf-8
+    QMAKE_CXXFLAGS += /utf-8
+}
 
-INCLUDEPATH += C:/ThirdPartyLib/vsurs0415/vsurs/include/common
-DEPENDPATH += C:/ThirdPartyLib/vsurs0415/vsurs/include/common
+FORMS += \
+    Dialog.ui
+
+HEADERS += \
+    Dialog.h

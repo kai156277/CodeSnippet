@@ -17,7 +17,7 @@ Widget::Widget(QWidget *parent)
     ui->plot->setSelectionRectMode(QCP::srmNone);
     //    setupPlot();
     scatterPlot();
-    curvePlot();
+    //    curvePlot();
 
     // configure scroll bars:
     // Since scroll bars only support integer values, we'll set a high default range of -500..500 and
