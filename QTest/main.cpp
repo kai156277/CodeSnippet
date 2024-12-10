@@ -39,8 +39,33 @@ bool search_map(const std::map<T, A> &map, T v)
     return false;
 }
 
+#include <iostream>
+#include <Eigen/Eigen>
+#include "unb3m.h"
+
+using namespace Eigen;
+
 int main(int argc, char *argv[])
 {
+    unb3m unb3;
+    double map = 0.0;
+    unb3.trop_unb3m(100.0, 100.0, 1, 10, map);
+    MatrixXd AVG(5,6);
+    AVG=MatrixXd::Zero(5,6);
+    AVG<<15.0,  1013.25,  299.65, 75.00,  6.30,  2.77,
+               30.0,  1017.25,  294.15, 80.00,  6.05,  3.15,
+               45.0,  1015.75,  283.15, 76.00,  5.58,  2.57,
+               60.0,  1011.75,  272.15, 77.50,  5.39,  1.81,
+               75.0,  1013.00,  263.65, 82.50,  4.53, 1.55;
+
+    double M = 0.5;
+    int P1 = 2, P2 = 3;
+    double PAVG = M * ( AVG(P2-1,1) - AVG(P1-1,1) ) + AVG(P1-1,1);
+    double t = AVG(0,0);
+    std::cout << AVG << std::endl;
+    std::cout << PAVG << std::endl;
+
+    return 0;
     QApplication    a(argc, argv);
     QProgressDialog progress("load image", "cancel", 0, 20, nullptr);
     progress.setMinimumDuration(0);

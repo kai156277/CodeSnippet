@@ -1,22 +1,103 @@
-﻿#include <QApplication>
-#include <QDebug>
-#include <iomanip>
-#include <iostream>
-#include <time.h>
-#include <windows.h>
+﻿#include "cppTest.h"
 
-#include <QDateTime>
-#include <QFile>
-#include <QString>
-#include <QStringRef>
-#include <QTextStream>
-#include <QVector>
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    TestThread   t;
+    t.start();
+    QObject::connect(&t, &TestThread::finished, [&]() {
+        std::cout << "test thread finished: " << t.isFinished();
+    });
+
+    return a.exec();
+}
+
+#if 0
+#    include <gtsam/geometry/PreintegratedImuMeasurements.h>
+#    include <gtsam/navigation/ImuFactor.h>
+
+// 定义一个IMU预积分因子类
+class CustomImuFactor : public gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Velocity3>
+{
+public:
+    CustomImuFactor(const gtsam::PreintegratedImuMeasurements &preintegratedMeasurements,
+                    const gtsam::Key &                         poseKey,
+                    const gtsam::Key &                         velocityKey,
+                    const gtsam::Vector3 &                     measuredAccel,
+                    const gtsam::Vector3 &                     measuredOmega,
+                    const gtsam::SharedNoiseModel &            model)
+        : gtsam::NoiseModelFactor2<gtsam::Pose3, gtsam::Velocity3>(model, poseKey, velocityKey)
+    {
+        // 根据IMU测量数据计算预积分因子的残差
+        // 这里只是一个简化的实现，实际应根据IMU预积分方法进行更详细的计算
+        gtsam::Vector6 imuDelta      = preintegratedMeasurements.predict(gtsam::Vector3::Zero(), gtsam::Vector3::Zero(), 0);
+        gtsam::Vector3 deltaVel      = imuDelta.head<3>();
+        gtsam::Vector3 deltaPos      = imuDelta.tail<3>();
+        gtsam::Vector3 residual      = measuredAccel - deltaVel;
+        residual_.template head<3>() = residual;
+        residual.template tail<3>()  = measuredOmega - deltaPos;
+    }
+
+    // 重载计算残差的函数
+    gtsam::Vector evaluateError(const gtsam::Pose3 &pose, const gtsam::Velocity3 &velocity, boost::optional<gtsam::Matrix &> H1 = boost::none, boost::optional<gtsam::Matrix &> H2 = boost::none) const override
+    {
+        if (H1)
+            *H1 = gtsam::Matrix::Zero(6, 6);
+        if (H2)
+            *H2 = gtsam::Matrix::Zero(6, 3);
+        return residual_;
+    }
+
+private:
+    gtsam::Vector6 residual_;   // 残差
+};
+
+// 在主函数中使用IMU预积分因子
+int main()
+{
+    // 创建IMU预积分对象
+    gtsam::PreintegratedImuMeasurements preintegratedMeasurements(/* imuParams */);
+
+    // 构建因子图
+    gtsam::NonlinearFactorGraph graph;
+    gtsam::Key                  poseKey     = gtsam::Symbol('x', 0);
+    gtsam::Key                  velocityKey = gtsam::Symbol('v', 0);
+    gtsam::Vector3              measuredAccel, measuredOmega;                          // IMU测量数据
+    gtsam::SharedNoiseModel     model = gtsam::noiseModel::Isotropic::Sigma(6, 1.0);   // 噪声模型
+    CustomImuFactor             imuFactor(preintegratedMeasurements, poseKey, velocityKey, measuredAccel, measuredOmega, model);
+    graph.add(imuFactor);
+
+    // 构建初始值估计
+    gtsam::Values initialEstimate;
+    initialEstimate.insert(poseKey, gtsam::Pose3());
+    initialEstimate.insert(velocityKey, gtsam::Velocity3());
+
+    // 优化因子图
+    gtsam::LevenbergMarquardtOptimizer optimizer(graph, initialEstimate);
+    gtsam::Values                      result = optimizer.optimize();
+
+    return 0;
+}
+#    include <QApplication>
+#    include <QDebug>
+#    include <iomanip>
+#    include <iostream>
+#    include <time.h>
+#    include <windows.h>
+
+#    include <QAxBase>
+#    include <QDateTime>
+#    include <QFile>
+#    include <QString>
+#    include <QStringRef>
+#    include <QTextStream>
+#    include <QVector>
 
 //#include <execution>
-#include <spdlog/qt_spdlog.h>
+#    include <spdlog/qt_spdlog.h>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#    define _USE_MATH_DEFINES
+#    include <math.h>
 
 constexpr double DEG2RAD = M_PI / 180.0;
 constexpr double RAD2DEG = 180.0 / M_PI;
@@ -265,9 +346,9 @@ IEPose string2IEPose(const QString &str)
     return pose;
 }
 
-#include <QFileDialog>
+#    include <QFileDialog>
 
-#pragma pack(push, 1)
+#    pragma pack(push, 1)
 //! bin文件字段
 struct InterpolateAllInformation
 {
@@ -313,33 +394,157 @@ struct InterpolateAllInformation
     uint16_t g;   ///<点云颜色G
     uint16_t b;   ///<点云颜色B
 };
-#pragma pack(pop)
+#    pragma pack(pop)
 
-#include <Dialog.h>
-#include <random>
+#    include <Dialog.h>
+#    include <random>
 
-#include <QInputDialog>
-
-int main(int argc, char *argv[])
+#    include <QInputDialog>
+typedef void (*ProgressFun)(void *context, int progress);
+typedef void(__stdcall *ProgressCallback)(float progress, const char *msg, const char *point_cloud_path);
+void create(int a, ProgressCallback cb = nullptr)
 {
-    spdlog::set_level(spdlog::level::trace);
-    QApplication a(argc, argv);
+    for (int i = 0; i < a; ++i)
+    {
+        if (cb)
+            cb(i, "create progress", "");
+    }
+}
 
-    QStringList files = QFileDialog::getOpenFileNames(nullptr, "pcap", "E:");
+#    include <functional>
+
+using ProgressCallbackEx = std::function<void(float progress, const char *msg, const char *point_cloud_path)>;
+
+void createEx(int a, ProgressCallbackEx cb = nullptr)
+{
+    for (int i = 0; i < a; ++i)
+    {
+        if (cb)
+            cb(i, "createEx", "");
+    }
+}
+
+void generateDEMEx(ProgressFun pf = nullptr)
+{
+    createEx(10, [=](float progress, const char *msg, const char *point_cloud_path) {
+        if (pf)
+            pf((void *) nullptr, progress);
+    });
+}
+
+void generateDEM(void *context, ProgressFun pf = nullptr)
+{
+    static ProgressFun s_pf = nullptr;
+    s_pf                    = pf;
+    static void *s_context  = nullptr;
+    s_context               = context;
+    create(10, [](float progress, const char *msg, const char *point_cloud_path) {
+        if (s_pf)
+            s_pf(s_context, progress);
+    });
+}
+
+struct Context
+{
+    double a;
+    double b;
+};
+
+#    include <Eigen/Dense>
+#    include <iostream>
+
+Eigen::MatrixXd removeRow(Eigen::MatrixXd originalMatrix, int rowIndexToRemove)
+{
+    Eigen::MatrixXd newMatrix(originalMatrix.rows() - 1, originalMatrix.cols());
+    newMatrix << originalMatrix.topRows(rowIndexToRemove),
+        originalMatrix.bottomRows(originalMatrix.rows() - rowIndexToRemove - 1);
+    return newMatrix;
+}
+
+int main()
+{
+    vector<double> s1;
+    vector<double> s2;
+    for (int i = 0; i < t.size(); i++)
+    {
+        s1.push_back(A * cos(2 * M_PI * flow_2fsk1 * t[i]));
+        s2.push_back(A * cos(2 * M_PI * flow_2fsk2 * t[i]));
+    }
+    // 假设我们有一个3x4的矩阵
+    Eigen::MatrixXd originalMatrix(4, 4);
+    originalMatrix << 1, 2, 3, 4,
+        5, 6, 7, 8,
+        8, 6, 7, 8,
+        9, 10, 11, 12;
+
+    vector<int> indexs {1, 3};
+
+    Eigen::MatrixXd newMatrix = originalMatrix;
+    for (int i = indexs.size() - 1; i >= 0; --i)
+    {
+        // 要去除的列的索引
+        int columnIndexToRemove = indexs[i];   // 假设要去除第2列（索引从0开始）
+
+        // 创建新的矩阵，去除指定的列
+
+        newMatrix = removeRow(newMatrix, columnIndexToRemove).eval();
+    }
+
+    // 输出结果
+    std::cout << "Original Matrix:" << std::endl
+              << originalMatrix << std::endl;
+    std::cout << "New Matrix (after removing column):" << std::endl
+              << newMatrix << std::endl;
+
+    return 0;
+}
+
+//    QApplication a(argc, argv);
+
+//    QString file_name = QFileDialog::getOpenFileName(nullptr, "pcap", "E:");
+//    QFile   sdc_file(file_name);
+
+//    sdc_file.open(QIODevice::ReadOnly);
+//    int32_t size = 0;
+//    sdc_file.read((char *) &size, sizeof(int32_t));
+//    int16_t major, minor;
+//    sdc_file.read((char *) &major, sizeof(int16_t));
+//    sdc_file.read((char *) &minor, sizeof(int16_t));
+//    char *head_info = new char[size - 8];
+//    sdc_file.read(head_info, size - 8);
+//    QString head_str = QString::fromUtf8(head_info, size - 8);
+//    qDebug() << head_str;
+//std::cout << head_info << std::endl;
+
+/*
+    Context co = {1.1, 2.2};
+
+    generateDEM((void *) &co, [](void *context, int progress) {
+        Context *c1 = reinterpret_cast<Context *>(context);
+        printf("%f + %f : %d\n", c1->a, c1->b, progress);
+    });
+
+    generateDEMEx([](void *context, int progress) {
+        printf("Ex : %d\n", progress);
+    });
+    QStringList files = QFileDialog::getOpenFileNames(nullptr, "pcap", "X://Calibration");
 
     QString num = QInputDialog::getText(nullptr, "set num", "num");
     for (auto filename : files)
     {
         QFileInfo   file_info(filename);
-        QString     name  = file_info.baseName();
+        QString     name  = file_info.completeBaseName();
         QStringList items = name.split("_");
         if (items.size() < 3)
         {
             items.push_back(num);
         }
         QDateTime datetime = QDateTime::fromString(items[0], "yyyy-MM-dd-HH-mm-ss");
-        QString   new_name = QString("%1_vlp%2.%3").arg(datetime.toString("yyMMdd-HHmmss")).arg(items[2]).arg(file_info.suffix());
-        QFile     file(filename);
+        //QString   new_name = QString("%1_vlp%2%3").arg(datetime.toString("yyMMdd-HHmmss")).arg(items[2]).arg(file_info.suffix());
+        QFile       file(filename);
+        QStringList new_items = {items[3], datetime.toString("yyMMdd-HHmmss"), num};
+        QString     new_name  = new_items.join("_") + ".txt";
+        //QFile       file(filename);
         qDebug() << name << "-->" << new_name << ":" << file.rename(file_info.absolutePath() + "/" + new_name);
     }
 
@@ -361,6 +566,4 @@ int main(int argc, char *argv[])
     }
     */
 
-    SPDLOG_INFO("END");
-    return 0;
-}
+#endif

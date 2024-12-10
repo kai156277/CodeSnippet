@@ -20,7 +20,8 @@ SOURCES += \
         DataSourceFactory.cpp \
         Dialog.cpp \
         PrintFormat.cpp \
-        main.cpp
+        main.cpp \
+        unb3m.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -32,7 +33,8 @@ HEADERS += \
     DataSource.h \
     DataSourceFactory.h \
     Dialog.h \
-    PrintFormat.h
+    PrintFormat.h \
+    unb3m.h
 
 INCLUDEPATH += C:/ThirdPartyLib/libfmt-5.3.0/include
 DEPENDPATH += C:/ThirdPartyLib/libfmt-5.3.0/include
@@ -41,6 +43,9 @@ DEFINES += FMT_HEADER_ONLY
 INCLUDEPATH += C:/ThirdPartyLib/libspdlog-1.3.1/include
 DEPENDPATH += C:/ThirdPartyLib/libspdlog-1.3.1/include
 DEFINES += SPDLOG_FMT_EXTERNAL
+
+INCLUDEPATH += C:/ThirdPartyLib/libEigen-3.4.0
+DEPENDPATH += C:/ThirdPartyLib/libEigen-3.4.0
 
 RC_FILE += resource.rc
 
